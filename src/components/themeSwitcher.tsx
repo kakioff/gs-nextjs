@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 import { Icon } from "@iconify-icon/react"
+import Loading from "./loading";
 
 export function ThemeSwitcher() {
     const [mounted, setMounted] = useState(false)
@@ -76,7 +77,7 @@ export function ThemeSwitcher() {
         })}
     </div>
 
-    if (!mounted) return <></>
+    if (!mounted) return <Loading />
 
     return themeLst.map((mode, index) => {
         if (theme != mode.key) return undefined

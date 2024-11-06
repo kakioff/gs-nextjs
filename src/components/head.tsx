@@ -12,7 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLHeadElement> {
 export default async function Head({ }: Props) {
     const session = await auth()
 
-    return <Navbar shouldHideOnScroll isBlurred isBordered className="bg-background/15" >
+    return <Navbar shouldHideOnScroll isBlurred isBordered className="bg-background/15 h-[64px]">
         <NavbarBrand>
             <NavbarMenuToggle
                 // aria-label={isMenuOpen ? "Close menu" : "Open menu"}
@@ -23,7 +23,7 @@ export default async function Head({ }: Props) {
             </NavbarBrand>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <RouteMenu  user={session?.user}/>
+            <RouteMenu user={session?.user} />
         </NavbarContent>
         <NavbarContent justify="end">
             <NavbarItem >

@@ -28,19 +28,16 @@ export default function RouteMenu({
             index: -1
         }])
 
-    useEffect(() => {
-        if (added) return
-        if (user) {
-            setAdded(true)
-            setMenuList(menuList.concat([{
-                label: "Dashboard",
-                path: "/dashboard"
-            }]).concat(withUser ? [{
-                label: "User",
-                path: "/user"
-            }] : []))
-        }
-    }, [user])
+    if (user && !added) {
+        setAdded(true)
+        setMenuList(menuList.concat([{
+            label: "Dashboard",
+            path: "/dashboard"
+        }]).concat(withUser ? [{
+            label: "User",
+            path: "/user"
+        }] : []))
+    }
     menuList.sort((a, b) => (b.index || 0) - (a.index || 0))
 
     const isActive = (path: string) => path == "/" ? pathname == "/" : pathname.startsWith(path)

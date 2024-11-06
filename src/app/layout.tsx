@@ -7,7 +7,6 @@ import Head from "@/components/head";
 import clsx from "clsx";
 import { SessionProvider } from "next-auth/react";
 import Background from "@/components/ui/background";
-import LoadingBar from "@/components/tools/loadingBar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -26,11 +25,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
+  
+  
   return (
     <html lang="zh-CN"
       suppressHydrationWarning={true}
@@ -42,11 +42,9 @@ export default async function RootLayout({
           <Providers
             className="h-full overflow-auto relative"
           >
-            <LoadingBar />
+            {/* <LoadingBar /> */}
             <Head />
-            <div className="container mx-auto relative">
-              {children}
-            </div>
+            {children}
             <div>
               <Background
                 mask="cursor"

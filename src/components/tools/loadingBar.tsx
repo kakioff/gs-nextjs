@@ -1,8 +1,9 @@
 "use client"
+
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function LoadingBar() {
-    const router = useRouter()
     // router.events.on("routeChangeStart", (...args)=>{
     //     console.log("routeChangeStart", args)
     // })
@@ -12,9 +13,9 @@ export default function LoadingBar() {
     // router.events.on("routeChangeError", (...args)=>{
     //     console.log("routeChangeError", args)
     // })
-    return (
-        <div className="absolute top-0 left-0 w-full h-1 bg-gray-200 z-[9999]">
-            <div className="loading-bar__progress"></div>
+    return <>
+        <div className="absolute top-0 left-0 bg-gray-200 w-1/2 h-1 z-[9999]" style={{
+        }}>
         </div>
-    );
+    </>;
 }
