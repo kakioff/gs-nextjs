@@ -19,8 +19,8 @@ jobs:
         uses: cloudposse/github-action-docker-build-push@main
         with:
           registry: registry.cn-hangzhou.aliyuncs.com
-          organization: "${{ github.event.repository.owner.login }}"
-          repository: "goodstuff"
+          organization: "goodstuff"
+          repository: "web-nextjs"
           login: "${{ secrets.ALI_DOCKERHUB_USERNAME }}"
           password: "${{ secrets.ALI_DOCKERHUB_PASSWORD }}"
           platforms: linux/amd64,linux/arm64
