@@ -146,9 +146,9 @@ export default function Editor({
     useEffect(() => {
         if (!vditor) return
         if (isDark) {
-            vditor.setTheme('dark', 'dark')
+            setTimeout(() => vditor.setTheme('dark', 'dark'), 50)
         } else {
-            vditor.setTheme('classic', 'light')
+            setTimeout(() => vditor.setTheme('classic', 'light'), 50)
         }
     }, [isDark, vditor])
     return <div ref={vditorDom} className={className}></div>
