@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:not(div[role="group"]) > a[role="button"],
+:not(div[role="group"]) > button {
+  @apply rounded-md !important;
+}
+
+.prose {
+  max-width: none !important;
+  pre {
+    padding: 0 !important;
+  }
+}

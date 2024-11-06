@@ -1,10 +1,11 @@
 "use client"
 import { Icon } from "@iconify-icon/react"
-import { Button, Listbox, ListboxItem, ListboxSection } from "@nextui-org/react"
+import { Listbox, ListboxItem } from "@nextui-org/react"
+import { useWindowSize } from "@reactuses/core"
 import clsx from "clsx"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 
 const MENU = [{
@@ -17,10 +18,12 @@ const MENU = [{
     icon: "tabler:settings"
 }]
 export default function UserLayout({ children }: { children: React.ReactNode }) {
-    const [packUp, setPackUp] = useState(false)
+    const [packUp, setPackUp] = useState(false),
+        { width: windowWidth } = useWindowSize(),
+        isPC = useMemo(() => windowWidth == 0 || windowWidth >= 639, [windowWidth])
     const routerPath = usePathname()
     const menuDom = MENU.map(item => {
-        let activated = routerPath == item.path
+        const activated = routerPath == item.path
         return <ListboxItem
             title={packUp ? <>&emsp;</> : item.name}
             // title={item.name}
@@ -30,20 +33,21 @@ export default function UserLayout({ children }: { children: React.ReactNode }) 
             startContent={
                 <Icon icon={item.icon} />
             }
-            className={clsx({ "bg-foreground/15 border border-foreground/20": activated })}
+            className={clsx({ "bg-foreground/15 border border-foreground/20 text-primary": activated })}
         />
     })
-    return <div className="flex flex-row">
+    return <div className="sm:flex flex-row">
         <div className="transition-width overflow-hidden flex-none" style={{
-            width: packUp ? "2.6rem" : "13rem",
+            width: isPC ? (packUp ? "2.6rem" : "13rem") : '100%',
         }}>
-            <Listbox >
-                {menuDom.concat(<ListboxItem
+            <Listbox label="menu">
+                {menuDom.concat(isPC ? <ListboxItem
                     key="sq"
                     title={packUp ? "" : "收起"}
-                    startContent={<Icon icon='tabler:arrow-bar-to-left' className={clsx({ "rotate-180": packUp })} />}
+                    startContent={<Icon icon='tabler:arrow-bar-to-left'
+                        className={clsx({ "rotate-180": packUp })} />}
                     onClick={() => setPackUp(!packUp)}
-                />)}
+                /> : [])}
 
             </Listbox>
         </div>

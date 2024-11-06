@@ -1,3 +1,4 @@
+"use client"
 import { Link, LinkProps } from "@nextui-org/react";
 import NextLink from "next/link";
 

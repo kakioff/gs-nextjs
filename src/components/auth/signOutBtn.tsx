@@ -16,7 +16,7 @@ export default function SignOutBtn({
         redirectTo
       })
     }}>
-      Sign Out
+      退出登录
     </Button>
   );
 }

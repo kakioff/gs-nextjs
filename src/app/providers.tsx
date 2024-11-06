@@ -3,12 +3,9 @@ import { NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
-
-}
 export function Providers({
   children, className, ...props
-}: Props) {
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <NextUIProvider className={className} {...props} id="providers">
       <ThemeProvider attribute='class' defaultTheme='system'>

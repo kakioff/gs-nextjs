@@ -1,6 +1,5 @@
 "use client"
 
-import { useUserStore } from "@/hooks/store";
 import { WebSocketProvider } from "next-ws/client";
 import { usePathname } from "next/navigation";
 
@@ -10,7 +9,6 @@ export default function Websocket({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userStore = useUserStore();
   const pathName = usePathname()
   return <WebSocketProvider url={`ws://127.0.0.1:8000/api/ws/file?client_id=${pathName}&room_id=123`}>
     {children}

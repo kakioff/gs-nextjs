@@ -1,7 +1,8 @@
 'use client';
 
+import { useWindowSize } from "@reactuses/core";
 import { useTheme } from "next-themes";
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import React, { CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
 // import { SpacingToken } from '../types';
 
 
@@ -49,12 +50,14 @@ export default function Background({
     gradient = {},
     dots = {},
     lines = {},
-    mask = 'none',
+    mask: autoMask = 'none',
     className,
     style
 }: BackgroundProps) {
     const [mounted, setMounted] = useState(false)
-    const { theme, resolvedTheme } = useTheme()
+    const { theme, resolvedTheme } = useTheme(),
+        { width: windowWidth } = useWindowSize(),
+        mask = useMemo(() => windowWidth < 369 ? 'topRight' : autoMask, [autoMask, windowWidth])
 
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [smoothPosition, setSmoothPosition] = useState({ x: 0, y: 0 });
@@ -124,15 +127,15 @@ export default function Background({
     }, [cursorPosition, mask]);
 
     if (!mounted || !resolvedTheme) return <></>
-    let dotsColor = dots.color || colors.dot[resolvedTheme];
-    let dotsSize = dots.size || '16';
+    const dotsColor = dots.color || colors.dot[resolvedTheme];
+    const dotsSize = dots.size || '16';
 
-    let maskSize = 1200;
+    const maskSize = 1200;
 
     // setRef(forwardedRef, backgroundRef.current);
 
 
-    let commonStyles: CSSProperties = {
+    const commonStyles: CSSProperties = {
         // @ts-ignore
         position,
         // @ts-ignore
@@ -150,7 +153,7 @@ export default function Background({
         ...style,
     };
 
-    let maskStyle = (): CSSProperties => {
+    const maskStyle = (): CSSProperties => {
         switch (mask) {
             case 'none':
                 return { maskImage: 'none' };
@@ -192,7 +195,7 @@ export default function Background({
                     className={className}
                     style={{
                         ...commonStyles,
-                        opacity: (gradient.opacity || 0.4)*(resolvedTheme=="dark"?1.2:.7),
+                        opacity: (gradient.opacity || 0.4) * (resolvedTheme == "dark" ? 1.2 : .7),
                         background: `radial-gradient(100% 100% at 49.99% 0%, transparent 0%, ${colors.gradient[resolvedTheme][0]} 100%), radial-gradient(87.4% 84.04% at 6.82% 16.24%, ${colors.gradient[resolvedTheme][1]} 0%, transparent 100%), radial-gradient(217.89% 126.62% at 48.04% 0%, ${colors.gradient[resolvedTheme][2]} 0%, transparent 100%)`,
                         ...maskStyle(),
                     }}
@@ -204,7 +207,7 @@ export default function Background({
                     className={className}
                     style={{
                         ...commonStyles,
-                        opacity: (dots.opacity || 0.4)*(resolvedTheme=="light"?1.2:1),
+                        opacity: (dots.opacity || 0.4) * (resolvedTheme == "light" ? 1.2 : 1),
                         backgroundImage: `radial-gradient(${dotsColor} 0.8px, #00000000 0.8px)`,
                         backgroundSize: `1.3rem 1.3rem`,
                         ...maskStyle(),

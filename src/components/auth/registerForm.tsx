@@ -1,5 +1,5 @@
 "use client"
-import { Button, Divider, Input } from "@nextui-org/react"
+import { Button, Input } from "@nextui-org/react"
 import clsx from "clsx"
 
 import { useState, useTransition } from "react";
@@ -40,8 +40,7 @@ function LoginMethods() {
     </div>
 }
 export default function RegisterForm({
-    className,
-    redirectTo = "/"
+    className
 }: Props) {
     const [isPadding, startTransition] = useTransition(),
         [errStr, setError] = useState<string>(),
@@ -64,11 +63,10 @@ export default function RegisterForm({
 
             startTransition(async () => {
                 try {
-                    let res = await userApi.register(values)
-                    console.log(res);
+                    const res = await userApi.register(values)
                     setSuccess("注册成功")
                 } catch (err: AxiosError | any) {
-                    let errData: ApiResponse<any> = err.response?.data
+                    const errData: ApiResponse<any> = err.response?.data
                     setError(errData.detail)
                 }
             })

@@ -1,0 +1,14 @@
+.info{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin: 10px 0;
+    span:first-child{
+        margin-right: 5px;
+        min-width: 70px;
+        @apply text-foreground-500;
+        &::after{
+            content: " : ";
+        }
+    }
+}

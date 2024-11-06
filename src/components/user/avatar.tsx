@@ -10,7 +10,8 @@ export default async function UserAvatar({
     className = "",
     ...props
 }: Props) {
-    let user = await auth()
-    let avatarUrl = getAvatar(user?.user?.id);
+    // const { data: user, status } = useSession()
+    const user = await auth()
+    const avatarUrl = getAvatar(user?.user?.id);
     return <Avatar src={avatarUrl} alt="avatar" className={clsx("rounded-full", className)} {...props} />
 }

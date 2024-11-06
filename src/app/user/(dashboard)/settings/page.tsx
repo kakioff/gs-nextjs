@@ -6,3 +6,6 @@ export default function SettingsPage() {
         </div>
     )
 }
+export const metadata = {
+    title: '设置',
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import UButton from "../ui/Button"
+import UButton from "@/components/ui/Button"
 import { ButtonProps } from "@nextui-org/react"
 
 interface Props extends ButtonProps {
@@ -14,8 +14,17 @@ export default function Link2Account({
     children,
     ...props
 }: Props) {
-
-    return <UButton onClick={() => signIn(provider)} {...props}>
+    const handleClick = async () => {
+        try {
+            await signIn(provider, {
+                redirect: false
+            })
+        }catch (err) {
+            console.log("error:", err);
+        }
+        
+     }
+    return <UButton onClick={handleClick} {...props}>
         {children || <>Link to {providerTitle || provider}</>}
     </UButton>
 }

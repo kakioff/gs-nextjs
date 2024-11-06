@@ -1,7 +1,7 @@
 import { create } from "zustand"
 import getUUID from "./getUUID"
-import { createJSONStorage, devtools, persist, StateStorage } from "zustand/middleware"
-import { setCookie, getCookie, deleteCookie } from "cookies-next"
+import { createJSONStorage, persist } from "zustand/middleware"
+import { setCookie, deleteCookie } from "cookies-next"
 // import { cookies } from "next/headers"
 import { parseCookies } from "nookies"
 
@@ -21,7 +21,7 @@ interface UserStore {
 // }))
 export const useUserStore = create<UserStore>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             deviceId: "",
             info: {} as UserInfo,
             generateDeviceId() {
@@ -35,8 +35,8 @@ export const useUserStore = create<UserStore>()(
             // skipHydration: true,
             storage: createJSONStorage(() => ({
                 getItem(name) {
-                    let item = parseCookies()[name]
-                    return item
+                    return parseCookies()[name]
+                    // return item
                     // let item
                     // if (window === undefined) {
                     //     item = cookies().get(name)

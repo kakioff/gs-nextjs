@@ -1,6 +1,5 @@
 import getUserSession from "@/hooks/getUserSession";
 import axios, { AxiosRequestConfig } from "axios";
-import { getSession } from "next-auth/react";
 
 export class Api {
     api_url: string = "http://127.0.0.1:8000"
@@ -15,38 +14,38 @@ export class Api {
         // let session = await getSession();
         // let r =await axios.get("http://localhost:3000/api/auth/session")
         // console.log(r);
-        let session = await getUserSession()
+        const session = await getUserSession()
         // return {
         //     data: {}
         // }
-        let headers: AxiosRequestConfig["headers"] = {
+        const headers: AxiosRequestConfig["headers"] = {
             "Content-Type": "application/json",
             "Device-Id": "web",
             ...config.headers
         }
-        
+
         if (session?.sessionToken)
             headers["Authorization"] = `Bearer ${session?.sessionToken}`
-
-        try{
+        
+        try {
             const response = await axios(new URL(this.url_prefix + url, this.api_url).href, {
                 method,
                 ...config,
                 headers
             });
             return response;
-        }catch(e) {
+        } catch (e) {
             throw e;
         }
-        
+
     }
     async get(url: string, config?: AxiosRequestConfig) {
         return await this.request(url, "GET", config)
     }
-    async post(url: string, body: any, config?: AxiosRequestConfig) {
+    async post(url: string, body: Record<string, unknown>, config?: AxiosRequestConfig) {
         return await this.request(url, "POST", {
+            data: JSON.stringify(body),
             ...config,
-            data: JSON.stringify(body)
         })
     }
 }

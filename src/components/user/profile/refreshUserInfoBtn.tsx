@@ -1,7 +1,6 @@
 "use client"
-import { userApi } from "@/api/user";
 import UButton from "../ui/Button";
-import { useSession, getSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface Props extends React.ComponentProps<typeof UButton> {
     redirect?: boolean
@@ -20,6 +19,6 @@ export default function RefreshUserInfoBtn({
         }
     }
     return <UButton onClick={getUserInfo} {...props}>
-        {children || 'Refresh User Info'}
+        {children || '刷新用户信息'}
     </UButton>
 }

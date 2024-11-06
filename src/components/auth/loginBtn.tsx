@@ -1,8 +1,11 @@
-import { auth } from "@/auth";
+import { auth, signOut } from "@/auth";
 import UButton from "@/components/ui/Button";
 import Link from "next/link";
 import UserAvatar from "../user/avatar";
-import { Button } from "@nextui-org/react";
+import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+import UDropdown from "../ui/dropdown";
+import UserDropdownItems from "../user/userDropdownItem";
 
 interface Props {
     withAvatar?: boolean
@@ -10,13 +13,15 @@ interface Props {
 export default async function LoginBtn({
     withAvatar = false
 }: Props) {
-    let session = await auth()
+    const session = await auth();
 
     if (session?.user)
-        return <Button variant="light" href="/user" as={Link}>
-            {withAvatar && <UserAvatar className="w-7 h-7"/>}
-            {session.user.name}
-        </Button>
+        return <UserDropdownItems>
+            <Button variant="light">
+                {withAvatar && <UserAvatar className="w-7 h-7" />}
+                {session.user.name}
+            </Button>
+        </UserDropdownItems>
     else
         return <UButton variant="light" href="/user/login" as={Link}>Login</UButton>
 

@@ -1,5 +1,4 @@
 import LoginForm from "@/components/auth/loginForm";
-import RegisterForm from "@/components/auth/registerForm";
 
 export default function RegisterPage({ searchParams }: React.PropsWithChildren<{
     searchParams: {

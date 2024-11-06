@@ -1,12 +1,12 @@
-import NextAuth, { User } from "next-auth"
+import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
-import Wechat from "next-auth/providers/wechat"
 import ClickUp from "next-auth/providers/click-up"
 import Credentials from "next-auth/providers/credentials"
+import { CredentialsSignin } from "next-auth"
 import { loginSchema } from "./schemas/auth"
 import { userApi } from "./api/user"
-import { RegisterFormType } from "./types/auth"
+import { AxiosError } from "axios"
 
 declare module "next-auth" {
   interface User extends UserInfo {
@@ -17,7 +17,13 @@ declare module "next-auth" {
     userId?: string
   }
 }
-
+class CustomError extends CredentialsSignin {
+  constructor(message?: string, options?: Record<string, unknown>) {
+    super(message, options)
+    if (message)
+      this.code = message
+  }
+}
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/user/login",
@@ -35,36 +41,61 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const validatedFields = loginSchema.safeParse(credentials)
         if (!validatedFields.success) {
-          throw new Error("Invalid credentials")
+          throw new CustomError(validatedFields.error.errors[0].message)
+        }
+        if (credentials.step == 0) {
+          // 验证用户名/邮箱是否存在
+
         }
         try {
-          let user = await userApi.login(validatedFields.data)
+          const user = await userApi.login(validatedFields.data)
 
           if (!user) return null
           return user
-        } catch (e: any) {
-          console.error("Credentials Error:", e.request);
-          return null
+        } catch (e: AxiosError | any) {
+          // return e.response.data
+          throw new CustomError(e.response.data.detail)
         }
+      }
+    }),
+    // 自定义验证码登录
+    Credentials({
+      name: "emial-code",
+      credentials: {
+        code: {
+          label: "Verification Code",
+          type: "text"
+        },
+        email: {
+          label: "Email",
+          type: "text"
+        }
+      },
+      async authorize(credentials) {
+        const validatedFields = loginSchema.safeParse(credentials)
+        if (!validatedFields.success) {
+          throw new Error("Invalid credentials")
+        }
+        return null
       }
     })
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ account }) {
+
       if (account?.provider == "credentials")
         return true
       if (!account?.access_token) return false
 
-      let session = await auth()
+      const session = await auth()
 
       if (session?.user) {
         // 绑定第三方账号
         try {
           await userApi.link2provider(account?.provider, account?.access_token)
           return true
-        } catch (e) {
-          console.log(e);
-          return false
+        } catch (e: AxiosError | any) {
+          throw new CustomError(e.response.data.detail)
 
         }
       }
@@ -81,12 +112,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     async jwt({ token, user, account, trigger }) {
       if (trigger == "update") {
-        let refreshedUser = await userApi.getUserInfo()
+        const refreshedUser = await userApi.getUserInfo()
         user = {
           ...(user || token.user),
           ...refreshedUser
         }
-        
+
       }
       try {
         // if (!user)
@@ -109,7 +140,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
 
-      let user = token.user as UserInfo
+      const user = token.user as UserInfo
       session.sessionToken = user.token
       session.user = user as any
       session.userId = user.id
@@ -129,4 +160,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     //   return true
     // }
   },
+  trustHost: true
 })
